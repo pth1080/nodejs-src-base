@@ -1,0 +1,4 @@
+module.exports = {
+  USER_001: 'USER_NOT_EXIST',
+  USER_002: 'INCORRECT_PASSWORD'
+}
