@@ -13,8 +13,13 @@ class UserController extends BaseController {
     try {
       let errors = await this.getErrorsParameters(req, validation.LOGIN_VALIDATION_SCHEMA)
       if (errors.length > 0) throw new ValidationError(errors)
-      let user = userRepo.Create(data.username, data.email, data.password)
-      let token = jwt.sign(user.id)
+      let isExistEmail = await userRepo.GetByEmail(data.email)
+      if (isExistEmail) throw new ValidationError('EMAIL_IS_EXIST')
+      let isExistUsername = await userRepo.GetByUsername(data.username)
+      if (isExistUsername) throw new ValidationError('USERNAME_IS_EXIST')
+      let user = await userRepo.Create(data.username, data.email, data.password)
+      let token = await jwt.sign(user.id)
+      console.log(token)
       return this.response(res).onSuccess(token)
     } catch (error) {
       console.log(error)
@@ -27,13 +32,25 @@ class UserController extends BaseController {
     try {
       let errors = await this.getErrorsParameters(req, validation.LOGIN_VALIDATION_SCHEMA)
       if (errors.length > 0) throw new ValidationError(errors)
-      let user = userRepo.GetByEmail(data.email)
+      let user = await userRepo.GetByEmail(data.email)
+      if (!user) throw new ValidationError(MessageCode.USER_001)
       const isMatch = await user.comparePassword(data.password)
-      if (!isMatch) throw new ValidationError(MessageCode.USER_001)
-      let token = jwt.sign(user.id)
+      if (!isMatch) throw new ValidationError(MessageCode.USER_002)
+      let token = await jwt.sign({ userID: user.id })
       return this.response(res).onSuccess(token)
     } catch (error) {
       console.log(error)
+      return this.response(res).onError(error)
+    }
+  }
+
+  async me (req, res) {
+    const userID = req.userID
+    try {
+      let user = await userRepo.GetByID(userID)
+      if (!user) throw new ValidationError(MessageCode.USER_001)
+      return this.response(res).onSuccess(user)
+    } catch (error) {
       return this.response(res).onError(error)
     }
   }
@@ -42,21 +59,13 @@ class UserController extends BaseController {
     const data = req.body
     const userID = req.userID
     try {
-      let user = userRepo.GetByID(userID)
+      let user = await userRepo.GetByID(userID)
+      if (!user) throw new ValidationError(MessageCode.USER_001)
       const isMatch = await user.comparePassword(data.oldPwd)
       if (!isMatch) throw new ValidationError(MessageCode.USER_002)
-      user.password = req.newPwd
+      user.password = data.newPwd
       user.save()
-      return this.response(res).onSuccess('success')
-    } catch (error) {
-      return this.response(res).onError(error)
-    }
-  }
-
-  async search (req, res) {
-    // const data = req.body
-    try {
-
+      return this.response(res).onSuccess(MessageCode.SUCCESS)
     } catch (error) {
       return this.response(res).onError(error)
     }

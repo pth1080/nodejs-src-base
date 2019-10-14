@@ -4,14 +4,11 @@ import ResponseHelper from '../helpers/response'
 // sign
 export async function sign (obj) {
   return new Promise((resolve, reject) => {
-    jwt.sign(obj, config.secretkey, config.expiresIn, (error, token) => {
+    jwt.sign(obj, config.secretkey, { expiresIn: config.expiresIn }, (error, token) => {
       if (error) {
+        console.log({ error })
         return reject(
-          ResponseHelper.respondWithError(
-            null,
-            401,
-            'AUTHENTICATION_FAILED'
-          )
+          error
         )
       }
       resolve(token)
@@ -24,11 +21,7 @@ export async function verify (token) {
     jwt.verify(token, config.secretkey, (error, obj) => {
       if (error) {
         return reject(
-          ResponseHelper.respondWithError(
-            null,
-            401,
-            'AUTHENTICATION_FAILED'
-          )
+          error
         )
       }
       delete obj.iat

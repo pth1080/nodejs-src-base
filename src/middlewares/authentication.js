@@ -1,7 +1,7 @@
 import * as jwt from '../helpers/jwt'
-const authenticate = (req, res, next) => {
-  let userID = jwt.verify(req.authentication)
-  req.userID = userID
+const authenticate = async (req, res, next) => {
+  let user = await jwt.verify(req.headers.authorization)
+  req.userID = user.userID
   next()
 }
 export default authenticate

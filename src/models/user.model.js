@@ -19,14 +19,14 @@ const UserSchema = new mongoose.Schema({
     required: true
   }
 }, {
-  timestamps: true
+  timestamps: true,
+  versionKey: false
 })
 
 UserSchema.pre('save', function (cb) {
   const user = this
   console.log('UserSchema Pre Save')
   if (!user.isModified('password')) return cb()
-  console.log('co thay doi nek')
 
   bcrypt.genSalt(SALT_WORK_FACTOR, (err, salt) => {
     if (err) return cb(err)
