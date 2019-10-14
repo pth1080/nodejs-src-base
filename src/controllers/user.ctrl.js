@@ -54,7 +54,7 @@ class UserController extends BaseController {
   }
 
   async search (req, res) {
-    const data = req.body
+    // const data = req.body
     try {
 
     } catch (error) {

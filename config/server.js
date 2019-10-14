@@ -1,4 +1,4 @@
 module.exports = {
-  PORT: 8000,
+  PORT: 8080,
   SEND_INTERVAL: 5 // In seconds
 }
