@@ -8,3 +8,5 @@ let controller = new UserController()
 router.post('/login', authentication, controller.login)
 router.post('/register', controller.register)
 router.post('/update/password', controller.updatePassword)
+
+export default router
