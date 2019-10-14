@@ -8,7 +8,6 @@ class BaseController extends BaseAutoBind {
       throw new TypeError('Cannot construct BaseController instances directly')
     }
     this._responseHelper = ResponseHelper
-    this._passport = require('passport')
     this.response = this._responseHelper.getDefaultResponseHandler
   }
   getErrorsParameters (req, bodySchema, querySchema, paramsSchema) {
