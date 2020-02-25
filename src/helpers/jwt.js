@@ -1,12 +1,15 @@
 import jwt from 'jsonwebtoken'
 import config from '../../config/jwt-options'
-import ResponseHelper from '../helpers/response'
 // sign
 export async function sign (obj) {
   return new Promise((resolve, reject) => {
-    jwt.sign(obj, config.secretkey, { expiresIn: config.expiresIn }, (error, token) => {
+    jwt.sign(obj, config.secretkey, {
+      expiresIn: config.expiresIn
+    }, (error, token) => {
       if (error) {
-        console.log({ error })
+        console.log({
+          error
+        })
         return reject(
           error
         )
