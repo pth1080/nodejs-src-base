@@ -16,7 +16,7 @@
     "mongoose-pagination": "^1.0.0",
     "morgan": "^1.9.1",
     "request": "^2.88.0",
-    "validator": "^10.8.0"
+    "validator": "^13.7.0"
   },
   "scripts": {
     "lint": "eslint --ext .js ./ --fix",
